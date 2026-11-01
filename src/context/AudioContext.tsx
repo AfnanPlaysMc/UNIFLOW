@@ -228,7 +228,7 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   }, [currentTrack]);
 
-  // Handle Playback Failure fallback: automatically cascades to alternative providers (iTunes, Audius, Deezer proxy)
+  // Handle Playback Failure fallback: automatically cascades to alternative providers (Audius, Deezer proxy)
   const handlePlaybackFailure = async () => {
     const track = currentTrackRef.current;
     if (!track) return;
@@ -317,7 +317,7 @@ export const AudioProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     if (!audio) return;
 
     try {
-      // Resolve direct audio source across Deezer, iTunes, Audius
+      // Resolve direct audio source across Deezer, Audius
       const resolved = await AudioSourceResolver.resolveSource(track);
 
       let chosenUrl = resolved.streamUrl;

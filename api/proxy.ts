@@ -3,7 +3,6 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 // Shared Utilities (Inlined for Vercel portability)
 const ALLOWED_HOSTS = new Set([
   'api.deezer.com',
-  'itunes.apple.com',
   'musicbrainz.org',
   'api.audius.co',
   'audius-discovery-1.cultur3stake.com',
@@ -19,9 +18,7 @@ function isAllowedHost(hostname: string): boolean {
     hostname.endsWith('.audius.co') ||
     hostname.endsWith('.creatorseed.com') ||
     hostname.endsWith('.dzcdn.net') ||
-    hostname.endsWith('.deezer.com') ||
-    hostname.endsWith('.apple.com') ||
-    hostname.endsWith('.mzstatic.com')
+    hostname.endsWith('.deezer.com')
   ) return true;
   return false;
 }

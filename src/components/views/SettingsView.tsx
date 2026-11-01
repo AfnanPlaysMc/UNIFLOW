@@ -411,7 +411,7 @@ export const SettingsView: React.FC = () => {
         <ul className="text-xs text-slate-600 dark:text-slate-400 space-y-1 list-disc list-inside">
           <li><strong className="text-slate-800 dark:text-slate-200">Decentralized Artist Network:</strong> Full-length decentralized artist streaming</li>
           <li><strong className="text-slate-800 dark:text-slate-200">Wikipedia REST API:</strong> Official artist biographies and encyclopedia entries</li>
-          <li><strong className="text-slate-800 dark:text-slate-200">Deezer & iTunes APIs:</strong> Global charts and rich metadata</li>
+          <li><strong className="text-slate-800 dark:text-slate-200">Deezer & Audius APIs:</strong> Global charts and rich metadata</li>
           <li><strong className="text-slate-800 dark:text-slate-200">LRCLIB API:</strong> Synchronized community lyrics</li>
           <li><strong className="text-slate-800 dark:text-slate-200">Firebase Firestore:</strong> Cloud persistence attached to your Google project</li>
         </ul>
