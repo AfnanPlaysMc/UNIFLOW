@@ -391,7 +391,7 @@ export const SettingsView: React.FC = () => {
       {/* About & Studio Attributions */}
       <section className="p-6 rounded-3xl bg-white dark:bg-[#0B0F19] border border-slate-200/90 dark:border-slate-800 shadow-sm space-y-4">
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-2xl overflow-hidden bg-slate-900 shadow-md border border-slate-200 dark:border-slate-700 shrink-0">
               <img src={OXA_LOGO} alt="OXA Studios Logo" className="w-full h-full object-cover" />
             </div>

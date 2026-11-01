@@ -84,7 +84,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onSelectArtist, onSelectAlbu
       {/* Hero Banner: Large Clean Typography + Featured Song Highlight */}
       <div className="relative rounded-3xl p-8 sm:p-10 overflow-hidden bg-gradient-to-br from-blue-50/90 via-white to-slate-50 dark:from-blue-950/60 dark:via-[#0B0F19] dark:to-[#060913] border border-slate-200/90 dark:border-slate-800/90 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 transition-colors">
         <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-blue-100/80 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-black mb-4 shadow-xs">
+          <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-blue-100/80 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-black mb-4 shadow-xs">
             <span className="w-4 h-4 rounded-full overflow-hidden inline-block border border-blue-300 dark:border-blue-700">
               <img src={OXA_LOGO} alt="OXA Studios" className="w-full h-full object-cover" />
             </span>

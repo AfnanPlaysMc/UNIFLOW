@@ -1,108 +1,23 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Default deny all unknown paths
-    match /{document=**} {
-      allow read, write: if false;
-    }
-
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
-    }
-
-    function isValidId(id) {
-      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-\\.:]+$');
-    }
-
-    function isValidUserProfile(data, userId) {
-      return data.keys().hasAll(['userId', 'email']) &&
-             data.userId == userId &&
-             data.userId == request.auth.uid &&
-             data.email is string && data.email.size() <= 256;
-    }
-
-    function isValidFavoriteTrack(data, userId) {
-      return data.keys().hasAll(['trackId', 'title', 'artist', 'userId']) &&
-             data.userId == userId &&
-             data.userId == request.auth.uid &&
-             data.trackId is string && data.trackId.size() <= 128 &&
-             data.title is string && data.title.size() <= 256 &&
-             data.artist is string && data.artist.size() <= 256;
-    }
-
-    function isValidPlaylist(data, userId) {
-      return data.keys().hasAll(['playlistId', 'userId', 'title']) &&
-             data.userId == userId &&
-             data.userId == request.auth.uid &&
-             data.playlistId is string && data.playlistId.size() <= 128 &&
-             data.title is string && data.title.size() <= 128;
-    }
-
-    function isValidHistoryItem(data, userId) {
-      return data.keys().hasAll(['historyId', 'trackId', 'userId', 'title', 'artist']) &&
-             data.userId == userId &&
-             data.userId == request.auth.uid &&
-             data.historyId is string && data.historyId.size() <= 128 &&
-             data.trackId is string && data.trackId.size() <= 128 &&
-             data.title is string && data.title.size() <= 256 &&
-             data.artist is string && data.artist.size() <= 256;
-    }
-
-    function isValidPreference(data, userId) {
-      return data.keys().hasAll(['userId']) &&
-             data.userId == userId &&
-             data.userId == request.auth.uid;
-    }
-
     // Connection testing doc
     match /test/connection {
       allow read: if true;
     }
 
-    // User profile documents
+    // Simplified rules for user data: must be signed in and owner of the data
     match /users/{userId} {
-      allow get: if isOwner(userId);
-      allow list: if false; // Blanket user queries are prohibited
-      allow create: if isOwner(userId) && isValidId(userId) && isValidUserProfile(request.resource.data, userId);
-      allow update: if isOwner(userId) && isValidId(userId) && isValidUserProfile(request.resource.data, userId);
-      allow delete: if isOwner(userId);
-
-      // Favorites subcollection
-      match /favorites/{trackId} {
-        allow get, list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(trackId) && isValidFavoriteTrack(request.resource.data, userId);
-        allow update: if isOwner(userId) && isValidId(trackId) && isValidFavoriteTrack(request.resource.data, userId);
-        allow delete: if isOwner(userId) && isValidId(trackId);
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      match /{allSubcollections=**} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
       }
+    }
 
-      // Playlists subcollection
-      match /playlists/{playlistId} {
-        allow get, list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(playlistId) && isValidPlaylist(request.resource.data, userId);
-        allow update: if isOwner(userId) && isValidId(playlistId) && isValidPlaylist(request.resource.data, userId);
-        allow delete: if isOwner(userId) && isValidId(playlistId);
-      }
-
-      // Listening history subcollection
-      match /history/{historyId} {
-        allow get, list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(historyId) && isValidHistoryItem(request.resource.data, userId);
-        allow update: if isOwner(userId) && isValidId(historyId) && isValidHistoryItem(request.resource.data, userId);
-        allow delete: if isOwner(userId) && isValidId(historyId);
-      }
-
-      // Preferences subcollection
-      match /preferences/{prefId} {
-        allow get, list: if isOwner(userId);
-        allow create: if isOwner(userId) && isValidId(prefId) && isValidPreference(request.resource.data, userId);
-        allow update: if isOwner(userId) && isValidId(prefId) && isValidPreference(request.resource.data, userId);
-        allow delete: if isOwner(userId) && isValidId(prefId);
-      }
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

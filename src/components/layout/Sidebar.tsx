@@ -45,7 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Brand Header */}
       <div
         onClick={() => onNavigate('home')}
-        className="p-6 flex items-center gap-3.5 cursor-pointer group"
+        className="p-6 flex items-center gap-2.5 cursor-pointer group"
       >
         <div className="w-12 h-12 rounded-2xl overflow-hidden bg-slate-900 shadow-md shadow-slate-900/10 group-hover:scale-105 transition-transform shrink-0 border border-slate-200 dark:border-slate-700">
           <img src={APP_LOGO} alt="Vibeo Logo" className="w-full h-full object-cover" />
@@ -54,7 +54,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
             Vibeo
           </h1>
-          <div className="flex items-center gap-1.5 mt-1">
+          <div className="flex items-center gap-1 mt-0.5">
             <span className="w-4 h-4 rounded-full overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700 inline-block">
               <img src={OXA_LOGO} alt="OXA Studios" className="w-full h-full object-cover" />
             </span>
