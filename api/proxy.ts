@@ -1,5 +1,30 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { isAllowedHost } from '/app/applet/lib/apiHandlers';
+
+// Shared Utilities (Inlined for Vercel portability)
+const ALLOWED_HOSTS = new Set([
+  'api.deezer.com',
+  'itunes.apple.com',
+  'musicbrainz.org',
+  'api.audius.co',
+  'audius-discovery-1.cultur3stake.com',
+  'audius-dp.singapore.creatorseed.com',
+  'discoveryprovider.audius.co',
+  'lrclib.net',
+  'en.wikipedia.org',
+]);
+
+function isAllowedHost(hostname: string): boolean {
+  if (ALLOWED_HOSTS.has(hostname)) return true;
+  if (
+    hostname.endsWith('.audius.co') ||
+    hostname.endsWith('.creatorseed.com') ||
+    hostname.endsWith('.dzcdn.net') ||
+    hostname.endsWith('.deezer.com') ||
+    hostname.endsWith('.apple.com') ||
+    hostname.endsWith('.mzstatic.com')
+  ) return true;
+  return false;
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const targetUrl = req.query.url as string;
@@ -22,19 +47,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 9000);
-
     const headers: Record<string, string> = {
       'User-Agent': 'WaveformMusicApp/1.0.0 (https://waveform.app; contact@waveform.app)',
       'Accept': 'application/json, text/plain, */*',
     };
 
     const fetchResponse = await fetch(targetUrl, {
-      signal: controller.signal,
       headers,
     });
-    clearTimeout(timeout);
 
     const contentType = fetchResponse.headers.get('content-type') || 'application/json';
     const textData = await fetchResponse.text();
@@ -42,13 +62,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(fetchResponse.status);
     res.setHeader('Content-Type', contentType);
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Cache-Control', 'public, max-age=60');
+    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate');
 
     res.send(textData);
   } catch (err: any) {
-    const isTimeout = err.name === 'AbortError';
-    res.status(isTimeout ? 504 : 502).json({
-      error: isTimeout ? 'Gateway Timeout' : 'Bad Gateway',
+    res.status(502).json({
+      error: 'Bad Gateway',
       message: err.message || 'Error communicating with external music API',
     });
   }

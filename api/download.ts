@@ -1,5 +1,4 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { resolveAudioDownloadUrl } from '/app/applet/lib/apiHandlers';
 import { Readable } from 'stream';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -13,7 +12,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let targetAudioUrl: string | null = null;
 
     // Direct stream logic for YouTube
-    if (videoId && (fileUrl.includes('youtube.com') || fileUrl.includes('embed'))) {
+    if (videoId && (fileUrl?.includes('youtube.com') || fileUrl?.includes('embed'))) {
       const mirrors = [
         'https://inv.privacydev.net',
         'https://invidious.projectsegfau.lt',
@@ -22,8 +21,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       for (const m of mirrors) {
         try {
           const u = `${m}/latest_version?id=${videoId}&itag=140`;
-          const res = await fetch(u, { method: 'HEAD', signal: AbortSignal.timeout(3000), redirect: 'follow' });
-          if (res.status === 200 || res.status === 206) {
+          const headRes = await fetch(u, { method: 'HEAD', redirect: 'follow' });
+          if (headRes.status === 200 || headRes.status === 206) {
             targetAudioUrl = u;
             break;
           }
@@ -37,8 +36,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (query) {
         try {
           const audiusRes = await fetch(
-            `https://api.audius.co/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=WAVEFORM&limit=2`,
-            { signal: AbortSignal.timeout(4000) }
+            `https://api.audius.co/v1/tracks/search?query=${encodeURIComponent(query)}&app_name=WAVEFORM&limit=2`
           );
           if (audiusRes.ok) {
             const data = await audiusRes.json();
@@ -51,7 +49,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
     }
 
-    // Fallback: Use original provided URL if it looks like an audio file
+    // Final Fallback: Use original URL if it's likely an audio file
     if (!targetAudioUrl && fileUrl && (fileUrl.includes('.mp3') || fileUrl.includes('dzcdn.net'))) {
       targetAudioUrl = fileUrl;
     }
@@ -61,7 +59,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    let response = await fetch(targetAudioUrl, { redirect: 'follow' });
+    const response = await fetch(targetAudioUrl, { redirect: 'follow' });
     if (!response.ok) {
       res.status(response.status).send(`Failed to stream audio file: ${response.statusText}`);
       return;

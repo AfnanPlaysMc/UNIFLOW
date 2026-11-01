@@ -72,11 +72,11 @@ const WORLD_FAMOUS_ARTISTS: Artist[] = [
     nbFans: 20951961,
   },
   {
-    id: 'dz_8706544',
+    id: 'dz_7543848',
     name: 'Post Malone',
-    picture: 'https://cdn-images.dzcdn.net/images/artist/877872aaf75694f11d53c318700ab2b5/1000x1000-000000-80-0-0.jpg',
-    pictureBig: 'https://cdn-images.dzcdn.net/images/artist/877872aaf75694f11d53c318700ab2b5/1000x1000-000000-80-0-0.jpg',
-    nbFans: 15000000,
+    picture: 'https://cdn-images.dzcdn.net/images/artist/a5a8cca44e7eab2db7d44e039bed2574/1000x1000-000000-80-0-0.jpg',
+    pictureBig: 'https://cdn-images.dzcdn.net/images/artist/a5a8cca44e7eab2db7d44e039bed2574/1000x1000-000000-80-0-0.jpg',
+    nbFans: 4215700,
   },
   {
     id: 'dz_14499793',
