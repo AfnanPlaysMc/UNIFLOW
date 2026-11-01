@@ -23,9 +23,14 @@ function mapDeezerTrack(d: any): Track {
 }
 
 export async function getDeezerChartTracks(limit = 20): Promise<Track[]> {
-  const url = `${BASE_URL}/chart/0/tracks?limit=${limit}`;
-  const res = await fetchProxiedJson<{ data: any[] }>(url);
-  return (res.data || []).map(mapDeezerTrack);
+  try {
+    const url = `${BASE_URL}/chart/0/tracks?limit=${limit}`;
+    const res = await fetchProxiedJson<{ data: any[] }>(url);
+    return (res.data || []).map(mapDeezerTrack);
+  } catch (err) {
+    console.warn('[Deezer] Chart tracks failed, using fallback or empty:', err);
+    return [];
+  }
 }
 
 const WORLD_FAMOUS_ARTISTS: Artist[] = [
@@ -143,29 +148,39 @@ export async function getDeezerChartArtists(limit = 10): Promise<Artist[]> {
 }
 
 export async function getDeezerChartAlbums(limit = 10): Promise<Album[]> {
-  const url = `${BASE_URL}/chart/0/albums?limit=${limit}`;
-  const res = await fetchProxiedJson<{ data: any[] }>(url);
-  return (res.data || []).map((al: any) => ({
-    id: `dz_${al.id}`,
-    title: al.title,
-    cover: al.cover_medium || al.cover || '',
-    coverBig: al.cover_xl || al.cover_big || '',
-    artist: al.artist?.name || 'Unknown',
-    artistId: al.artist?.id ? `dz_${al.artist.id}` : undefined,
-  }));
+  try {
+    const url = `${BASE_URL}/chart/0/albums?limit=${limit}`;
+    const res = await fetchProxiedJson<{ data: any[] }>(url);
+    return (res.data || []).map((al: any) => ({
+      id: `dz_${al.id}`,
+      title: al.title,
+      cover: al.cover_medium || al.cover || '',
+      coverBig: al.cover_xl || al.cover_big || '',
+      artist: al.artist?.name || 'Unknown',
+      artistId: al.artist?.id ? `dz_${al.artist.id}` : undefined,
+    }));
+  } catch (err) {
+    console.warn('[Deezer] Chart albums failed:', err);
+    return [];
+  }
 }
 
 export async function getDeezerNewReleases(limit = 10): Promise<Album[]> {
-  const url = `${BASE_URL}/chart/0/albums?limit=${limit}`;
-  const res = await fetchProxiedJson<{ data: any[] }>(url);
-  return (res.data || []).map((al: any) => ({
-    id: `dz_${al.id}`,
-    title: al.title,
-    cover: al.cover_medium || al.cover || '',
-    coverBig: al.cover_xl || al.cover_big || '',
-    artist: al.artist?.name || 'Unknown',
-    artistId: al.artist?.id ? `dz_${al.artist.id}` : undefined,
-  }));
+  try {
+    const url = `${BASE_URL}/chart/0/albums?limit=${limit}`;
+    const res = await fetchProxiedJson<{ data: any[] }>(url);
+    return (res.data || []).map((al: any) => ({
+      id: `dz_${al.id}`,
+      title: al.title,
+      cover: al.cover_medium || al.cover || '',
+      coverBig: al.cover_xl || al.cover_big || '',
+      artist: al.artist?.name || 'Unknown',
+      artistId: al.artist?.id ? `dz_${al.artist.id}` : undefined,
+    }));
+  } catch (err) {
+    console.warn('[Deezer] New releases failed:', err);
+    return [];
+  }
 }
 
 export async function searchDeezer(query: string, limit = 25): Promise<{

@@ -7,13 +7,16 @@ let hostResolved = false;
 export async function getAudiusHost(): Promise<string> {
   if (hostResolved) return cachedAudiusHost;
   try {
-    const res = await fetchProxiedJson<{ data: string[] }>('https://api.audius.co');
-    if (res.data && res.data.length > 0) {
-      cachedAudiusHost = res.data[0];
-      hostResolved = true;
+    const res = await fetch('https://api.audius.co');
+    if (res.ok) {
+      const data = await res.json();
+      if (data.data && data.data.length > 0) {
+        cachedAudiusHost = data.data[0];
+        hostResolved = true;
+      }
     }
   } catch (e) {
-    console.warn('[Audius] Could not resolve discovery host, using default:', cachedAudiusHost);
+    console.warn('[Audius] Host resolution failed:', e);
   }
   return cachedAudiusHost;
 }
@@ -46,20 +49,34 @@ function mapAudiusTrack(t: any, host: string): Track {
 }
 
 export async function getAudiusTrendingTracks(limit = 20): Promise<Track[]> {
-  const host = await getAudiusHost();
-  const url = `${host}/v1/tracks/trending?app_name=WAVEFORM&limit=${limit}`;
-  const res = await fetchProxiedJson<{ data: any[] }>(url);
-  return (res.data || [])
-    .filter((t) => !t.is_delete && t.is_streamable !== false && t.duration > 0)
-    .map((t) => mapAudiusTrack(t, host));
+  try {
+    const host = await getAudiusHost();
+    const url = `${host}/v1/tracks/trending?app_name=WAVEFORM&limit=${limit}`;
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.data || [])
+      .filter((t: any) => !t.is_delete && t.is_streamable !== false && t.duration > 0)
+      .map((t: any) => mapAudiusTrack(t, host));
+  } catch (err) {
+    console.error('[Audius] Trending tracks failed:', err);
+    return [];
+  }
 }
 
 export async function searchAudiusTracks(query: string, limit = 20): Promise<Track[]> {
   if (!query.trim()) return [];
-  const host = await getAudiusHost();
-  const url = `${host}/v1/tracks/search?query=${encodeURIComponent(query.trim())}&app_name=WAVEFORM&limit=${limit}`;
-  const res = await fetchProxiedJson<{ data: any[] }>(url);
-  return (res.data || [])
-    .filter((t) => !t.is_delete && t.is_streamable !== false && t.duration > 0)
-    .map((t) => mapAudiusTrack(t, host));
+  try {
+    const host = await getAudiusHost();
+    const url = `${host}/v1/tracks/search?query=${encodeURIComponent(query.trim())}&app_name=WAVEFORM&limit=${limit}`;
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.data || [])
+      .filter((t: any) => !t.is_delete && t.is_streamable !== false && t.duration > 0)
+      .map((t: any) => mapAudiusTrack(t, host));
+  } catch (err) {
+    console.error('[Audius] Search failed:', err);
+    return [];
+  }
 }
