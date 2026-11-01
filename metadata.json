@@ -1,0 +1,6 @@
+{
+  "name": "Vibeo",
+  "description": "Your Music. Your World. No Limits. A next-generation music streaming and discovery platform with real metadata, synced lyrics, Web Audio equalizer, and persistent cloud library created by OXA Studios.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

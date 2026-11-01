@@ -1,0 +1,1310 @@
+# ============================================================
+# WAVEFORM — ULTIMATE MASTER DEVELOPMENT PROMPT
+# Build a next-generation, Spotify-inspired music platform.
+# ============================================================
+
+# 1. YOUR ROLE
+
+You are an elite software engineering team consisting of:
+
+- Senior full-stack engineers
+- Music streaming infrastructure engineers
+- Audio processing specialists
+- API integration engineers
+- UI/UX designers
+- Database and browser-storage engineers
+- Performance optimization specialists
+- Security engineers
+- QA and testing engineers
+
+Your task is to design, develop, test, and deliver WAVEFORM, a complete, production-quality music streaming and discovery platform.
+
+Do not create a visual prototype.
+
+Do not create a landing page pretending to be a music application.
+
+Do not create fake functionality.
+
+Build a genuinely functional application with real integrations, real music metadata, working playback sources, persistent user libraries, and a professional audio player.
+
+# 2. PRODUCT VISION
+
+Product name: WAVEFORM
+
+Tagline: Your Music. Your World. No Limits.
+
+Primary objective:
+
+Create an elegant, fast, modern music platform that combines the best experiences of Spotify, Apple Music, YouTube Music, and SoundCloud.
+
+WAVEFORM should prioritize:
+
+1. Music discovery.
+2. Real music metadata.
+3. Legitimate full-length audio playback where available.
+4. Intelligent source resolution.
+5. Personalized music organization.
+6. Beautiful album artwork.
+7. Advanced audio controls.
+8. A highly responsive interface.
+9. Offline functionality where technically and legally permitted.
+10. A seamless desktop and mobile experience.
+
+The platform must be completely free to use.
+
+# 3. NON-NEGOTIABLE DEVELOPMENT RULES
+
+These rules apply to the entire project.
+
+1. Do not use paid APIs.
+2. Do not require a credit card.
+3. Do not use paid hosting.
+4. Do not require a subscription.
+5. Do not use a proprietary API that requires a paid developer account.
+6. Do not use Spotify's API as the primary music provider.
+7. Do not generate fake music metadata.
+8. Do not generate fake artists, albums, tracks, or playlists.
+9. Do not use random album artwork as real artwork.
+10. Do not implement buttons that do nothing.
+11. Do not leave TODO comments instead of implementations.
+12. Do not create nonfunctional player controls.
+13. Do not use fake loading progress.
+14. Do not simulate successful audio playback.
+15. Do not claim a track is playing unless audio is actually playing.
+16. Do not hide API failures.
+17. Do not bypass provider restrictions, regional restrictions, authentication, or copyright protections.
+18. Never download, cache, redistribute, or expose audio unless the provider explicitly permits it.
+19. Never advertise a preview as a full-length track.
+20. Never invent a working stream URL.
+
+When a feature cannot be implemented with free, authorized services, explain the limitation and provide the best legitimate alternative.
+
+# 4. ZERO-COST ARCHITECTURE
+
+The application must be deployable using free-tier infrastructure.
+
+Frontend:
+- Next.js App Router.
+- TypeScript.
+- Tailwind CSS.
+- React.
+- Lucide icons.
+- HTML5 Audio.
+- Web Audio API.
+
+Hosting:
+- Cloudflare Pages where compatible.
+- Cloudflare Pages Functions.
+- Free *.pages.dev deployment.
+- No rented VPS.
+- No paid hosting.
+
+Storage:
+- IndexedDB for playlists, favorites, queue preferences, and user library.
+- localStorage for settings and lightweight preferences.
+- Cache API for permitted application assets.
+- No mandatory external database.
+
+Important Cloudflare compatibility requirement:
+
+Use a Next.js deployment adapter compatible with Cloudflare Pages, such as the currently supported OpenNext Cloudflare integration.
+
+Do not assume ordinary Next.js server functionality automatically works on Cloudflare Pages.
+
+Verify compatibility of every server-side feature.
+
+If a feature requires infrastructure unavailable on the free tier, redesign it.
+
+Do not introduce KV, R2, D1, Durable Objects, or another paid service as a mandatory dependency.
+
+Optional free-tier services may be used only when their current availability and limitations have been verified.
+
+# 5. SYSTEM ARCHITECTURE
+
+Separate the application into independent systems.
+
+## A. METADATA ENGINE
+
+Responsible for:
+
+- Track information.
+- Artist information.
+- Album information.
+- Genres.
+- Album artwork.
+- Release dates.
+- Track durations.
+- Artist relationships.
+- Music discovery.
+
+Potential providers:
+
+DEEZER:
+https://api.deezer.com
+
+ITUNES SEARCH:
+https://itunes.apple.com/search
+
+MUSICBRAINZ:
+https://musicbrainz.org/ws/2
+
+AUDIUS:
+https://api.audius.co
+
+Every provider must have its own client module.
+
+Never make the entire application dependent on one provider.
+
+## B. AUDIO ENGINE
+
+Responsible for:
+
+- Finding playable tracks.
+- Resolving audio sources.
+- Checking source availability.
+- Starting playback.
+- Handling playback failures.
+- Tracking current playback time.
+- Managing the playback queue.
+- Handling source switching.
+
+Potential providers:
+
+- Audius official API.
+- Official artist-provided audio.
+- Other explicitly authorized open music catalogs.
+- Provider-authorized streaming embeds.
+
+YouTube and Piped must not be treated as unrestricted audio extraction services.
+
+Only integrate a provider through methods it permits.
+
+If a source cannot legally or technically provide direct playback, use its official player or mark it unavailable.
+
+## C. LYRICS ENGINE
+
+Provider:
+
+LRCLIB
+
+https://lrclib.net/api
+
+Responsible for:
+
+- Searching lyrics.
+- Retrieving synchronized lyrics.
+- Retrieving plain lyrics.
+- Matching lyrics to the correct recording.
+- Synchronizing lyrics with playback.
+
+## D. LOCAL LIBRARY ENGINE
+
+Responsible for:
+
+- Favorites.
+- Playlists.
+- Recently played.
+- Play history.
+- Saved albums.
+- Saved artists.
+- User preferences.
+- Queue persistence.
+
+Use IndexedDB.
+
+All user data should remain available after refreshing the page.
+
+# 6. API INTEGRATION SPECIFICATIONS
+
+Create a centralized API architecture.
+
+All integrations must have:
+
+- Typed requests.
+- Typed responses.
+- Error handling.
+- Timeout protection.
+- Retry logic where appropriate.
+- Request cancellation.
+- Response validation.
+- Caching.
+- Rate-limit handling.
+- Clear provider attribution.
+
+## DEEZER
+
+Use for metadata and charts when its API is accessible and its terms permit the intended use.
+
+Endpoints:
+
+GET /search?q={query}
+
+GET /search/artist?q={query}
+
+GET /artist/{id}
+
+GET /artist/{id}/top?limit=25
+
+GET /artist/{id}/albums
+
+GET /album/{id}
+
+GET /track/{id}
+
+GET /chart/0/tracks
+
+GET /chart/0/artists
+
+GET /chart/0/albums
+
+Important:
+
+Do not assume every endpoint is available in every region.
+
+Do not assume metadata access grants audio playback rights.
+
+Do not assume preview URLs provide complete tracks.
+
+## ITUNES SEARCH
+
+Endpoint:
+
+https://itunes.apple.com/search?term={query}&entity=song&limit=25
+
+Use for:
+
+- Album artwork.
+- Track metadata.
+- Artist information.
+- Release dates.
+- Secondary search results.
+
+Artwork enhancement:
+
+Where a valid larger artwork variant exists, use the higher-resolution image.
+
+Handle missing images gracefully.
+
+Do not assume every result has a usable 1000x1000 image.
+
+## MUSICBRAINZ
+
+Artist search:
+
+/ws/2/artist?query={query}&fmt=json&limit=10
+
+Artist details:
+
+/ws/2/artist/{mbid}?inc=url-rels+genres&fmt=json
+
+Use a descriptive User-Agent.
+
+Respect its one-request-per-second guideline.
+
+Implement caching and request throttling.
+
+Do not invent artist biographies.
+
+If a biography is unavailable, show available verified information instead.
+
+## LRCLIB
+
+Search:
+
+https://lrclib.net/api/search?q={query}
+
+Exact lookup:
+
+https://lrclib.net/api/get?artist_name={artist}&track_name={track}&album_name={album}&duration={duration}
+
+Match the returned track against:
+
+- Artist.
+- Track title.
+- Album.
+- Duration.
+
+Do not display mismatched lyrics.
+
+# 7. AUDIO SOURCE RESOLUTION
+
+Implement a dedicated AudioSourceResolver.
+
+The resolver must operate independently from metadata search.
+
+Resolution process:
+
+STEP 1 — Identify the requested recording.
+
+Extract:
+
+- Track title.
+- Primary artist.
+- Featured artists.
+- Album.
+- Duration.
+- Recording identifiers when available.
+
+STEP 2 — Search authorized sources.
+
+Audius should be searched first when appropriate.
+
+Compare:
+
+- Title similarity.
+- Artist similarity.
+- Duration.
+- Recording identity.
+
+Do not automatically choose the first result.
+
+STEP 3 — Validate the candidate.
+
+Check:
+
+- Provider availability.
+- Whether playback is authorized.
+- Whether the stream is accessible.
+- Whether the track is complete.
+- Whether the source is actually audio.
+- Whether the recording matches the requested track.
+
+STEP 4 — Select the best valid source.
+
+STEP 5 — Start playback.
+
+STEP 6 — If playback fails, attempt the next eligible provider.
+
+STEP 7 — If no valid source exists, show a clear unavailable state.
+
+Never silently substitute an unrelated remix, cover, live performance, or another artist's recording.
+
+Create a source status badge:
+
+- Audius
+- Official Embed
+- Preview
+- Unavailable
+
+Use accurate labels.
+
+Never display FULL TRACK unless the provider confirms the complete recording is available.
+
+Persist source preferences locally, but revalidate availability before playback.
+
+# 8. COMPLETE APPLICATION FEATURES
+
+## 8.1 HOME PAGE
+
+Create a personalized-looking home page with:
+
+- Greeting based on time of day.
+- Recently played.
+- Trending tracks.
+- Popular artists.
+- Popular albums.
+- New releases.
+- Recommended genres.
+- Top charts.
+- Featured playlists.
+- Continue listening.
+- Discover new music.
+
+Use real API responses.
+
+Every section must have a useful loading skeleton.
+
+If a provider fails, show an appropriate error state instead of fabricated results.
+
+## 8.2 SEARCH
+
+Create a professional search experience.
+
+Features:
+
+- 300–400ms debounce.
+- Search history.
+- Clear search button.
+- Search suggestions.
+- Keyboard navigation.
+- Recent searches.
+- Search result highlighting.
+
+Tabs:
+
+- All.
+- Tracks.
+- Artists.
+- Albums.
+- Playlists.
+
+Each result must contain:
+
+- Correct artwork.
+- Correct title.
+- Artist name.
+- Duration when available.
+- Play action when playable.
+- More-options menu.
+
+Support empty states and network errors.
+
+Do not return fabricated search results.
+
+## 8.3 ARTIST PAGES
+
+Include:
+
+- Large artist header.
+- Artist image.
+- Artist name.
+- Verified metadata where available.
+- Biography when available.
+- Genres.
+- Popular tracks.
+- Albums.
+- Singles.
+- Related artists.
+- Play artist button.
+- Follow artist button.
+
+Followed artists must persist in IndexedDB.
+
+## 8.4 ALBUM PAGES
+
+Include:
+
+- Album cover.
+- Album name.
+- Artist.
+- Release date.
+- Track count.
+- Total duration.
+- Tracklist.
+- Play album.
+- Shuffle album.
+- Save album.
+- More options.
+
+Display unavailable tracks accurately.
+
+## 8.5 PLAYLIST SYSTEM
+
+Users must be able to:
+
+- Create playlists.
+- Rename playlists.
+- Delete playlists.
+- Add tracks.
+- Remove tracks.
+- Reorder tracks.
+- Change playlist artwork where supported.
+- Play playlists.
+- Shuffle playlists.
+- View total duration.
+
+Use drag-and-drop with touch support.
+
+Persist everything in IndexedDB.
+
+No account should be mandatory for local playlists.
+
+## 8.6 ADVANCED MUSIC PLAYER
+
+This is one of the most important parts of WAVEFORM.
+
+Build a persistent player that remains mounted across navigation.
+
+Desktop layout:
+
+- Album artwork.
+- Track title.
+- Artist.
+- Favorite button.
+- Playback controls.
+- Seekbar.
+- Current time.
+- Total duration.
+- Volume.
+- Queue.
+- Lyrics.
+- Audio settings.
+
+Mobile layout:
+
+- Compact mini-player.
+- Expandable full-screen player.
+- Large artwork.
+- Touch-friendly controls.
+- Swipe navigation.
+- Bottom navigation integration.
+
+Playback controls:
+
+- Play.
+- Pause.
+- Previous.
+- Next.
+- Shuffle.
+- Repeat off.
+- Repeat all.
+- Repeat one.
+- Seek.
+- Volume.
+- Mute.
+
+Additional features:
+
+- Playback speed where supported.
+- Sleep timer.
+- Queue management.
+- Keyboard shortcuts.
+- Media Session API.
+- Lock-screen controls where supported.
+- Background playback where browser permissions allow.
+
+Keyboard shortcuts:
+
+SPACE: Play/Pause.
+
+LEFT: Seek backward.
+
+RIGHT: Seek forward.
+
+M: Mute.
+
+S: Shuffle.
+
+R: Repeat.
+
+Do not intercept keyboard shortcuts while users are typing in inputs.
+
+## 8.7 PROFESSIONAL AUDIO ENGINE
+
+Implement a reusable Web Audio API audio graph.
+
+Features:
+
+- 10-band equalizer.
+- Preset equalizer profiles.
+- Custom EQ.
+- Volume normalization where technically supported.
+- Audio visualization.
+- Frequency spectrum.
+- Playback state monitoring.
+
+EQ presets:
+
+- Flat.
+- Bass Boost.
+- Treble Boost.
+- Pop.
+- Rock.
+- Classical.
+- Jazz.
+- Electronic.
+- Vocal.
+- Acoustic.
+
+Use real BiquadFilterNodes.
+
+Do not create fake EQ sliders.
+
+Handle CORS restrictions correctly.
+
+If a cross-origin stream cannot be connected to the Web Audio graph, preserve ordinary HTML5 playback and explain the unavailable processing features.
+
+Crossfade:
+
+Implement 0–12 second crossfade only when two compatible audio sources can be played simultaneously.
+
+Gapless playback:
+
+Implement only when the source and browser support reliable continuous playback.
+
+Do not promise gapless playback when it cannot be guaranteed.
+
+## 8.8 LIVE WAVEFORM
+
+Create a visually impressive waveform seekbar.
+
+Requirements:
+
+- Real audio-derived waveform or frequency data where accessible.
+- Played and unplayed regions.
+- Current-time indicator.
+- Drag-to-seek.
+- Touch-to-seek.
+- Hover timestamp.
+- Smooth animation.
+
+Do not invent audio waveform data and label it real.
+
+If an actual waveform cannot be generated, use a clearly identified decorative visualization.
+
+## 8.9 LYRICS
+
+Build a dedicated lyrics interface.
+
+Features:
+
+- Synchronized lyrics.
+- Automatic scrolling.
+- Current line highlighting.
+- Manual line selection.
+- Plain lyrics fallback.
+- Lyrics unavailable state.
+
+Use playback time to synchronize the lyrics.
+
+Do not make lyrics jump unpredictably.
+
+## 8.10 QUEUE
+
+Create a full queue management interface.
+
+Users can:
+
+- See current track.
+- See upcoming tracks.
+- Reorder tracks.
+- Remove tracks.
+- Clear queue.
+- Add tracks.
+- Save queue as playlist.
+
+Support shuffle without losing the original playlist order.
+
+## 8.11 LISTENING HISTORY
+
+Create:
+
+- Recently played.
+- Listening history.
+- Recently played albums.
+- Most played artists.
+- Track play counts.
+
+Store locally.
+
+Only count a play after a reasonable listening threshold.
+
+## 8.12 OFFLINE MODE
+
+Implement offline functionality carefully.
+
+Cache:
+
+- Application shell.
+- Icons.
+- Fonts where licensed.
+- Album artwork where permitted.
+- User library.
+- Playlist metadata.
+
+Audio caching must only occur when the source explicitly allows offline storage.
+
+Do not download copyrighted music or circumvent provider controls.
+
+Show offline availability separately from ordinary favorites.
+
+# 9. USER INTERFACE AND VISUAL IDENTITY
+
+Design an exceptional interface.
+
+The application should feel like a premium commercial music product.
+
+Color palette:
+
+Background: #08080C
+
+Secondary background: #0E0E16
+
+Surface: #14141F
+
+Elevated surface: #1B1B29
+
+Primary accent: #8B5CF6
+
+Secondary accent: #22C55E
+
+Text: #FFFFFF
+
+Secondary text: #A1A1B5
+
+Borders: #29293A
+
+Accent gradient:
+
+#7C3AED → #22C55E
+
+Design language:
+
+- Premium dark interface.
+- Subtle glassmorphism.
+- Soft neon lighting.
+- Smooth transitions.
+- Rounded cards.
+- High-quality album artwork.
+- Blurred album artwork backgrounds.
+- Consistent spacing.
+- Clean typography.
+- Minimal visual clutter.
+
+Avoid excessive glowing effects.
+
+Avoid excessive gradients.
+
+Avoid oversized cards.
+
+Make the interface feel sophisticated rather than childish.
+
+## DESKTOP LAYOUT
+
+Three main areas:
+
+LEFT SIDEBAR:
+
+- Waveform logo.
+- Home.
+- Search.
+- Your Library.
+- Favorites.
+- Recently Played.
+- Your Playlists.
+- Create Playlist.
+- Settings.
+
+MAIN CONTENT:
+
+- Page navigation.
+- Search area.
+- Dynamic page content.
+- Scrollable sections.
+
+BOTTOM PLAYER:
+
+- Current track.
+- Playback controls.
+- Seekbar.
+- Volume.
+- Queue.
+- Lyrics.
+- Audio settings.
+
+## MOBILE LAYOUT
+
+Use:
+
+- Responsive bottom navigation.
+- Compact player.
+- Full-screen player.
+- Touch-friendly buttons.
+- Responsive artwork.
+- Mobile search.
+- Swipe gestures where appropriate.
+
+Never simply shrink the desktop sidebar.
+
+Create a genuinely mobile-first experience.
+
+# 10. APPLICATION SETTINGS
+
+Build a real settings page.
+
+Sections:
+
+ACCOUNT / LOCAL PROFILE:
+- Display name.
+- Profile picture.
+- Local user preferences.
+
+APPEARANCE:
+- Dark theme.
+- Accent color.
+- Compact mode.
+- Artwork animations.
+
+PLAYBACK:
+- Audio quality when supported.
+- Autoplay.
+- Crossfade.
+- Volume normalization.
+- Equalizer.
+
+PRIVACY:
+- Clear listening history.
+- Clear search history.
+- Export library.
+- Import library.
+- Delete local application data.
+
+ABOUT:
+- Application version.
+- Provider credits.
+- Open-source licenses.
+- Privacy policy.
+- Terms of use.
+
+# 11. TECHNICAL ARCHITECTURE
+
+Use a modular project structure.
+
+Required structure:
+
+waveform/
+│
+├── app/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── globals.css
+│   ├── search/
+│   │   └── page.tsx
+│   ├── artist/
+│   │   └── [id]/
+│   │       └── page.tsx
+│   ├── album/
+│   │   └── [id]/
+│   │       └── page.tsx
+│   ├── library/
+│   │   └── page.tsx
+│   ├── playlist/
+│   │   └── [id]/
+│   │       └── page.tsx
+│   ├── settings/
+│   │   └── page.tsx
+│   └── api/
+│       └── proxy/
+│           └── route.ts
+│
+├── components/
+│   ├── layout/
+│   │   ├── Sidebar.tsx
+│   │   ├── MobileNavigation.tsx
+│   │   ├── TopBar.tsx
+│   │   └── AppShell.tsx
+│   ├── player/
+│   │   ├── PlayerBar.tsx
+│   │   ├── FullScreenPlayer.tsx
+│   │   ├── PlaybackControls.tsx
+│   │   ├── Waveform.tsx
+│   │   ├── VolumeControl.tsx
+│   │   ├── Equalizer.tsx
+│   │   ├── Queue.tsx
+│   │   └── SleepTimer.tsx
+│   ├── music/
+│   │   ├── TrackRow.tsx
+│   │   ├── AlbumCard.tsx
+│   │   ├── ArtistCard.tsx
+│   │   ├── PlaylistCard.tsx
+│   │   ├── TrackMenu.tsx
+│   │   └── AlbumGrid.tsx
+│   ├── lyrics/
+│   │   └── LyricsPane.tsx
+│   ├── search/
+│   │   ├── SearchBar.tsx
+│   │   └── SearchResults.tsx
+│   └── common/
+│       ├── Skeleton.tsx
+│       ├── EmptyState.tsx
+│       ├── ErrorState.tsx
+│       └── ArtworkFallback.tsx
+│
+├── lib/
+│   ├── api/
+│   │   ├── deezer.ts
+│   │   ├── itunes.ts
+│   │   ├── musicbrainz.ts
+│   │   ├── audius.ts
+│   │   └── lrclib.ts
+│   ├── audio/
+│   │   ├── audio-engine.ts
+│   │   ├── source-resolver.ts
+│   │   ├── playback-manager.ts
+│   │   ├── equalizer.ts
+│   │   └── media-session.ts
+│   ├── database/
+│   │   ├── db.ts
+│   │   ├── playlists.ts
+│   │   ├── favorites.ts
+│   │   └── history.ts
+│   ├── hooks/
+│   ├── utils/
+│   ├── constants.ts
+│   └── types.ts
+│
+├── public/
+│   ├── icons/
+│   ├── images/
+│   ├── manifest.json
+│   └── favicon.ico
+│
+├── functions/
+│   └── api/
+│       └── proxy.ts
+│
+├── tests/
+│   ├── api/
+│   ├── player/
+│   └── library/
+│
+├── .env.local.example
+├── .gitignore
+├── package.json
+├── tsconfig.json
+├── next.config.ts
+├── wrangler.toml
+├── README.md
+└── LICENSE
+
+You may add files when genuinely necessary.
+
+Do not create duplicate proxy implementations. Choose the correct Cloudflare-supported routing structure and document it.
+
+# 12. API PROXY AND SECURITY
+
+Create a secure centralized proxy.
+
+Requirements:
+
+- Provider allowlist.
+- Allowed path validation.
+- Query parameter validation.
+- URL encoding.
+- Request timeout.
+- Response size limits.
+- Content-type validation.
+- Appropriate CORS configuration.
+- Cache headers.
+- Error normalization.
+- Rate limiting where feasible.
+
+Never implement an unrestricted open proxy.
+
+Never allow arbitrary URLs from query parameters.
+
+Never expose private API keys.
+
+Do not assume proxying solves a provider's authentication, licensing, or access restrictions.
+
+Use the correct User-Agent for providers that require it.
+
+Do not cache private user data or unauthorized audio.
+
+# 13. PERFORMANCE ENGINEERING
+
+Optimize for low-end devices and slower internet connections.
+
+Requirements:
+
+- Lazy loading.
+- Dynamic imports.
+- Image optimization.
+- Responsive image sizing.
+- Debounced search.
+- AbortController.
+- Request deduplication.
+- Intelligent caching.
+- Minimal React re-renders.
+- Persistent player state.
+- Efficient audio event listeners.
+- Proper cleanup.
+- No unnecessary background polling.
+
+Preload the next track only when appropriate and permitted.
+
+Do not preload entire music catalogs.
+
+Use skeletons instead of intrusive loading spinners.
+
+Handle slow networks gracefully.
+
+# 14. ERROR HANDLING
+
+Build a centralized error system.
+
+Handle:
+
+- API unavailable.
+- API rate limits.
+- Invalid metadata.
+- Missing artwork.
+- Missing lyrics.
+- Invalid track ID.
+- Unavailable audio.
+- Unsupported codec.
+- CORS restrictions.
+- Network interruption.
+- Playback failure.
+- IndexedDB failure.
+- Browser autoplay restrictions.
+- Offline mode.
+- Expired stream URLs.
+- Unsupported browser APIs.
+
+Every error should have a meaningful user-facing message.
+
+Never leave the player stuck in a loading state.
+
+# 15. ACCESSIBILITY
+
+Implement:
+
+- Keyboard navigation.
+- Accessible labels.
+- Focus indicators.
+- Semantic HTML.
+- Screen-reader support.
+- Adequate contrast.
+- Reduced-motion support.
+- Touch-friendly controls.
+
+Do not sacrifice accessibility for visual effects.
+
+# 16. PWA REQUIREMENTS
+
+Create a complete installable PWA.
+
+Include:
+
+- Web manifest.
+- Application icons.
+- Service worker.
+- Install prompt.
+- Offline application shell.
+- Cache versioning.
+- Update notification.
+- Service-worker cleanup.
+
+Ensure installation works on supported browsers.
+
+# 17. TESTING REQUIREMENTS
+
+Do not consider the application complete merely because it compiles.
+
+Test:
+
+API:
+- Valid response.
+- Invalid response.
+- Timeout.
+- Rate limiting.
+- Provider unavailable.
+
+PLAYER:
+- Play.
+- Pause.
+- Seek.
+- Previous.
+- Next.
+- Shuffle.
+- Repeat.
+- Volume.
+- Track completion.
+- Source failure.
+- Source fallback.
+
+LIBRARY:
+- Add favorite.
+- Remove favorite.
+- Create playlist.
+- Delete playlist.
+- Reorder tracks.
+- Refresh persistence.
+
+UI:
+- Desktop.
+- Tablet.
+- Mobile.
+- Empty states.
+- Error states.
+- Loading states.
+
+Use TypeScript checks, linting, unit tests, and browser-level tests.
+
+Fix all critical errors before delivery.
+
+# 18. BUILD ORDER
+
+Follow this exact development sequence.
+
+PHASE 1 — FOUNDATION
+
+- Initialize project.
+- Install dependencies.
+- Configure TypeScript.
+- Configure Tailwind.
+- Configure Cloudflare compatibility.
+- Build project structure.
+- Establish shared types.
+
+PHASE 2 — API INFRASTRUCTURE
+
+- Build proxy.
+- Build Deezer client.
+- Build iTunes client.
+- Build MusicBrainz client.
+- Build Audius client.
+- Build LRCLIB client.
+- Implement caching.
+- Implement validation.
+- Test real API responses.
+
+PHASE 3 — MUSIC DISCOVERY
+
+- Home page.
+- Charts.
+- Search.
+- Track results.
+- Artist pages.
+- Album pages.
+- Real artwork.
+- Loading and error states.
+
+PHASE 4 — PLAYBACK
+
+- Audio engine.
+- Source resolver.
+- Persistent player.
+- Playback queue.
+- Media Session.
+- Source fallback.
+- Playback testing.
+
+PHASE 5 — LIBRARY
+
+- IndexedDB.
+- Favorites.
+- Playlists.
+- History.
+- Recently played.
+- Drag-and-drop.
+
+PHASE 6 — ADVANCED PLAYER
+
+- Equalizer.
+- Audio visualization.
+- Waveform.
+- Lyrics.
+- Sleep timer.
+- Crossfade where supported.
+- Keyboard controls.
+
+PHASE 7 — PWA AND POLISH
+
+- Service worker.
+- Manifest.
+- Offline shell.
+- Responsive optimization.
+- Accessibility.
+- Animations.
+- Performance optimization.
+
+PHASE 8 — FINAL TESTING AND DEPLOYMENT
+
+- Build.
+- Type checks.
+- Lint.
+- Unit tests.
+- Browser tests.
+- Production configuration.
+- Cloudflare deployment instructions.
+- README.
+
+# 19. CRITICAL DEVELOPMENT BEHAVIOR
+
+You must work systematically.
+
+Do not attempt to generate the entire application in one enormous unstructured response.
+
+Work phase by phase.
+
+For each phase:
+
+1. Explain what is being implemented.
+2. Show the complete file tree changes.
+3. Create every required file.
+4. Provide complete source code.
+5. Explain important architectural decisions.
+6. Test the implementation.
+7. Fix errors.
+8. Confirm which features genuinely work.
+9. Identify remaining limitations.
+10. Proceed to the next phase.
+
+When working inside an IDE or project workspace, directly create and modify the actual project files.
+
+Do not merely describe code that should be written.
+
+Do not replace complete files with partial snippets.
+
+Do not omit imports.
+
+Do not reference nonexistent components.
+
+Do not leave broken imports.
+
+Do not silently skip a requested feature.
+
+If output limits prevent completing a phase, stop at a clean file boundary and continue from that exact point.
+
+# 20. FINAL DELIVERABLE
+
+The final result must include:
+
+- Complete source code.
+- Full project structure.
+- Working API integrations.
+- Real metadata.
+- Real artwork.
+- Legitimate playable audio integrations.
+- Functional persistent player.
+- Functional playlists.
+- Functional favorites.
+- Functional lyrics integration.
+- Responsive UI.
+- PWA support.
+- Security protections.
+- Error handling.
+- Tests.
+- Cloudflare deployment configuration.
+- Complete README.
+- Installation instructions.
+- Deployment instructions.
+- Provider attribution.
+- Known limitations.
+
+Create a final functionality report separating:
+
+A. Fully implemented and tested.
+
+B. Implemented with provider or browser limitations.
+
+C. Unavailable due to external service, licensing, or infrastructure restrictions.
+
+Never mark an untested feature as working.
+
+# 21. START NOW
+
+Begin with PHASE 1 and PHASE 2.
+
+Your immediate first tasks:
+
+1. Inspect the current workspace.
+2. Verify the latest compatible Next.js and Cloudflare deployment approach.
+3. Establish the architecture.
+4. Initialize the complete project.
+5. Implement the centralized API infrastructure.
+6. Implement the provider clients.
+7. Test the actual endpoints.
+8. Show complete source code for every created file.
+
+Do not start designing the homepage before the API architecture is established.
+
+Do not use fake data to make the homepage look populated.
+
+The ultimate goal is not to create a Spotify-looking website.
+
+The goal is to create a genuinely useful, reliable, beautiful music platform called WAVEFORM.
+
+BUILD IT PROPERLY.

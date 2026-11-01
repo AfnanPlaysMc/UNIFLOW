@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "photoURL": { "type": "string", "maxLength": 1024 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["userId", "email"]
+    },
+    "FavoriteTrack": {
+      "title": "FavoriteTrack",
+      "description": "A track favorited by the user",
+      "type": "object",
+      "properties": {
+        "trackId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "artist": { "type": "string", "maxLength": 256 },
+        "album": { "type": "string", "maxLength": 256 },
+        "artwork": { "type": "string", "maxLength": 1024 },
+        "duration": { "type": "number" },
+        "streamUrl": { "type": "string", "maxLength": 2048 },
+        "source": { "type": "string", "maxLength": 64 },
+        "addedAt": { "type": "string", "maxLength": 64 },
+        "userId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["trackId", "title", "artist", "userId"]
+    },
+    "Playlist": {
+      "title": "Playlist",
+      "description": "User created music playlist",
+      "type": "object",
+      "properties": {
+        "playlistId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 512 },
+        "coverUrl": { "type": "string", "maxLength": 1024 },
+        "trackCount": { "type": "number" },
+        "duration": { "type": "number" },
+        "tracks": {
+          "type": "array",
+          "description": "Array of track items in the playlist"
+        },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["playlistId", "userId", "title"]
+    },
+    "HistoryItem": {
+      "title": "HistoryItem",
+      "description": "Listening history item",
+      "type": "object",
+      "properties": {
+        "historyId": { "type": "string", "maxLength": 128 },
+        "trackId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "artist": { "type": "string", "maxLength": 256 },
+        "album": { "type": "string", "maxLength": 256 },
+        "artwork": { "type": "string", "maxLength": 1024 },
+        "duration": { "type": "number" },
+        "source": { "type": "string", "maxLength": 64 },
+        "playedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["historyId", "trackId", "userId", "title", "artist"]
+    },
+    "UserPreference": {
+      "title": "UserPreference",
+      "description": "User playback and UI settings",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "themeAccent": { "type": "string", "maxLength": 32 },
+        "crossfade": { "type": "number" },
+        "equalizerPreset": { "type": "string", "maxLength": 64 },
+        "audioQuality": { "type": "string", "maxLength": 32 },
+        "volumeNormalization": { "type": "boolean" },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["userId"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile collection storing individual user information"
+    },
+    "/users/{userId}/favorites/{trackId}": {
+      "schema": "FavoriteTrack",
+      "description": "Subcollection of favorite music tracks favorited by the user"
+    },
+    "/users/{userId}/playlists/{playlistId}": {
+      "schema": "Playlist",
+      "description": "Subcollection of custom music playlists created by the user"
+    },
+    "/users/{userId}/history/{historyId}": {
+      "schema": "HistoryItem",
+      "description": "Subcollection of tracks listened to by the user"
+    },
+    "/users/{userId}/preferences/{prefId}": {
+      "schema": "UserPreference",
+      "description": "Subcollection storing user audio and display preferences"
+    }
+  }
+}
