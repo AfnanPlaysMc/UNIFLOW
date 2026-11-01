@@ -3,8 +3,7 @@ import { Track } from '../types';
 export async function searchYouTubeTracks(query: string, limit = 20): Promise<Track[]> {
   if (!query.trim()) return [];
   try {
-    const baseUrl = typeof window !== 'undefined' ? '' : 'http://localhost:3000';
-    const res = await fetch(`${baseUrl}/api/youtube/search?q=${encodeURIComponent(query.trim())}`);
+    const res = await fetch(`/api/youtube/search?q=${encodeURIComponent(query.trim())}`);
     if (!res.ok) return [];
     const data = await res.json();
     return (data.data || []).slice(0, limit).map((t: any) => ({

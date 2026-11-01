@@ -15,8 +15,7 @@ export async function fetchProxiedJson<T>(targetUrl: string, options?: { signal?
   }
 
   // Construct request to our Express proxy
-  const baseUrl = typeof window !== 'undefined' ? '' : 'http://localhost:3000';
-  const proxyUrl = `${baseUrl}/api/proxy?url=${encodeURIComponent(targetUrl)}`;
+  const proxyUrl = `/api/proxy?url=${encodeURIComponent(targetUrl)}`;
 
   try {
     const response = await fetch(proxyUrl, {

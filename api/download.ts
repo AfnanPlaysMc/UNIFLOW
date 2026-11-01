@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { resolveAudioDownloadUrl } from '../lib/apiHandlers';
+import { resolveAudioDownloadUrl } from '/app/applet/lib/apiHandlers';
 import { Readable } from 'stream';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

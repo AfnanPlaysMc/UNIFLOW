@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { NON_MUSIC_REGEX, cleanYouTubeTitle } from '../lib/apiHandlers';
+import { NON_MUSIC_REGEX, cleanYouTubeTitle } from '/app/applet/lib/apiHandlers';
 
 const INVIDIOUS_MIRRORS = [
   'https://invidious.projectsegfau.lt',

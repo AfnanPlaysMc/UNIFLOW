@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { isAllowedHost } from '../lib/apiHandlers';
+import { isAllowedHost } from '/app/applet/lib/apiHandlers';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const targetUrl = req.query.url as string;
